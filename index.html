@@ -51,6 +51,9 @@
                 
             }
 
+            //work in progress
+            function getCardImg(suit, rank){}
+
 
             function MyApp() {
 
@@ -67,6 +70,42 @@
                 const reset = () => {
                     set_deck(generateDeck());
                     set_hand([]);
+                    set_selected_card(null);
+                }
+
+                const toss = () => {
+                    if(selected_card !== null){
+                        set_hand(hand.filter( (_,card) => card !== selected_card) );
+                        set_selected_card(null);
+                    }
+                }
+
+                const wildcard = () => {
+                    let rand_suit = Math.floor(Math.random() * card_suits.length);
+                    let rand_val = Math.floor(Math.random() * card_values.length);
+                    const card = {
+                        "suit": card_suits[rand_suit],
+                        "value" : card_values[rand_val],
+                        "img" : getCardImg(rand_suit, rand_val)
+                    }
+          
+                    set_hand([...hand, card]);
+                }
+
+                const shuffle = () => {
+                    const hand_copy = [...hand];
+
+
+                    for(let i = 0; i < hand_copy.length; i++){
+                        let x = Math.floor(Math.random() * hand_copy.length);
+                        let y = Math.floor(Math.random() * hand_copy.length);
+
+                        let temp = hand_copy[x];
+                        hand_copy[x] = hand_copy[y];
+                        hand_copy[y] = temp;
+                    }
+
+                    set_hand(hand_copy);
                     set_selected_card(null);
                 }
 
