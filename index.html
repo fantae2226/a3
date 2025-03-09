@@ -22,8 +22,8 @@
 
         <script type="text/babel">
 
-            const card_suits = ["heart", "club", "spade", "diamond"];
-            const card_values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+            const card_suits = ["Hearts", "Clubs", "Spades", "Diamonds"];
+            const card_values = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"];
 
 
             const container = document.getElementById('root');
@@ -41,7 +41,7 @@
                         let card_info = {
                             "suit" : suit,
                             "value": value,
-                            "img" : null
+                            "img" : getCardImg(suit, value, card_info)
                         };
                         deck_array.push(card_info);
                     }
@@ -52,7 +52,12 @@
             }
 
             //work in progress
-            function getCardImg(suit, rank){}
+            function getCardImg(suit, rank, card){
+                return (
+                    <img src={`cards/${suit}_${rank}.png`} alt={`${rank} of ${suit}`}
+                    className="card" onClick={() => set_selected_card(card)}/>
+                );
+            }
 
 
             function MyApp() {
@@ -86,7 +91,7 @@
                     const card = {
                         "suit": card_suits[rand_suit],
                         "value" : card_values[rand_val],
-                        "img" : getCardImg(rand_suit, rand_val)
+                        "img" : getCardImg(rand_suit, rand_val, card)
                     }
           
                     set_hand([...hand, card]);
@@ -110,7 +115,20 @@
                 }
 
                 const display = () => {
+
+                }
+
+                const add_card = () => {
+                    const newDeck = [...deck];
+                    const newHand = [...hand];
                     
+                    const random_index = Math.floor(Math.random() * newDeck.length);
+                    
+                    newHand.push(newDeck.splice(randIndex, 1)[0]);
+                    
+                    setDeck(newDeck);
+                    setHand(newHand);
+                    setSelected(null);
                 }
 
 
