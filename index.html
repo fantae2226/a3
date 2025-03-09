@@ -41,7 +41,7 @@
                         let card_info = {
                             "suit" : suit,
                             "value": value,
-                            "img" : null,
+                            "img" : null
                         };
                         deck_array.push(card_info);
                     }
@@ -54,11 +54,21 @@
 
             function MyApp() {
 
-                
+                // initial card and deck hooks
                 const [deck, set_deck] = React.useState(generateDeck());
                 const [hand, set_hand] = React.useState([]);
                 const [selected_card, set_selected_card] = React.useState(false);
 
+
+                const select_card = (card) => {
+                    set_selected_card(selected_card === card ? null : card);  
+                };
+
+                const reset = () => {
+                    set_deck(generateDeck());
+                    set_hand([]);
+                    set_selected_card(null);
+                }
 
             }
 
