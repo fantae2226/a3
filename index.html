@@ -14,7 +14,7 @@
         <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
         
         <!--Style Sheet-->
-        <link rel="stylesheet" href="style.css" />
+        <link rel="stylesheet" href="styles.css" />
     </head>
     <body>
 
@@ -34,14 +34,14 @@
 
 
 
-            function generateDeck() {
+            function generateDeck(selected_card,set_selected_card) {
                 let deck_array = [];
                 for(let suit of card_suits){
                     for(let value of card_values){
                         let card_info = {
                             "suit" : suit,
                             "value": value,
-                            "img" : getCardImg(suit, value, card_info)
+                            "img" : getCardImg(suit, value, card_info, selected_card)
                         };
                         deck_array.push(card_info);
                     }
@@ -51,19 +51,24 @@
                 
             }
 
-            //work in progress
-            function getCardImg(suit, rank, card){
+            function getCardImg(suit, rank, card, selected_card){
+                let isSelected = false;
+                if (card === selected_card){
+                    isSelected = true
+                }
+
                 return (
                     <img src={`cards/${suit}_${rank}.png`} alt={`${rank} of ${suit}`}
-                    className="card" onClick={() => set_selected_card(card)}/>
+                    className={isSelected ? "selected_card" : "card"} onClick={() => set_selected_card(card)}/>
                 );
             }
+
 
 
             function MyApp() {
 
                 // initial card and deck hooks
-                const [deck, set_deck] = React.useState(generateDeck());
+                const [deck, set_deck] = React.useState(generateDeck(selected_card,set_selected_card));
                 const [hand, set_hand] = React.useState([]);
                 const [selected_card, set_selected_card] = React.useState(false);
 
@@ -114,9 +119,11 @@
                     set_selected_card(null);
                 }
 
-                const display = () => {
+                // const display_hand = () => {
+                //     if(hand.length > 0){
 
-                }
+                //     }
+                // }
 
                 const add_card = () => {
                     const newDeck = [...deck];
@@ -124,14 +131,23 @@
                     
                     const random_index = Math.floor(Math.random() * newDeck.length);
                     
-                    newHand.push(newDeck.splice(randIndex, 1)[0]);
+                    newHand.push(newDeck.splice(random_index, 1)[0]);
                     
-                    setDeck(newDeck);
-                    setHand(newHand);
-                    setSelected(null);
+                    set_deck(newDeck);
+                    set_hand(newHand);
+                    set_selected_card(null);
                 }
 
-
+                const display_deck = ()  => {
+                    if (deck.length > 0) { // there are cards in deck 
+                        return (<div className="card_back" onClick={() => add_card()}>
+                                    <img src="cards\Card_Back_3.png" alt="card back"/>
+                                </div>) 
+                    }
+                    else { // no cards in deck 
+                        return <h3 className="no_cards">No Cards Remaining</h3>
+                    }
+                }
 
 
 
@@ -148,8 +164,23 @@
                             <div className="titleName">Ebby's Gambling Corner</div>
                         </div>
 
-                        <div id="card_container" className="d-flex align-items-center">
-                            Bullshit    
+                        <div id="deck_container" className="d-flex align-items-center">
+                            {display_deck()}
+                        </div>
+                        <div id="card-count">
+                            {/* Display remaining cards in deck */}
+                            <p>Cards Remaining: {deck.length}</p>
+                        </div>
+
+                        <div id="hand_container" className="d-flex align-items-center">
+                            {hand.length > 0 ? (hand.map((card, index) => (
+                                <div key={index}>
+                                    {card.img}
+                                </div>
+                            ))
+                            ) : (
+                                <div>No cards in hand</div>
+                            )}
                         </div>
                     </div>
                 );
